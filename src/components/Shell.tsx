@@ -8,6 +8,7 @@ import {
   Home, IdCard, List, LogOut, Mail, Menu, NotebookPen, Users, Wallet, X,
 } from "lucide-react";
 import { NAV, NOMBRE_ROL, RAPIDOS } from "./navegacion";
+import { Isotipo } from "./Isotipo";
 import type { Rol } from "@/db/tipos";
 
 const ICONOS: Record<string, typeof Home> = {
@@ -58,9 +59,7 @@ export function Shell({
 
   const marca = (
     <Link href="/inicio" className="flex items-center gap-3">
-      <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand font-display text-lg font-bold text-brand-ink">
-        <Perlas />
-      </span>
+      <Isotipo size={38} className="shrink-0" />
       <span className="min-w-0 leading-tight">
         <span className="block truncate font-display font-bold">Cuaderno Digital</span>
         <span className="block truncate text-xs text-muted">{colegio}</span>
@@ -150,17 +149,5 @@ export function Shell({
         </div>
       )}
     </div>
-  );
-}
-
-/** Marca: tres perlas doradas, como el material de numeración Montessori. */
-export function Perlas({ size = 22 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
-      <circle cx="12" cy="5.5" r="3.6" fill="#f0b54a" />
-      <circle cx="12" cy="12" r="3.6" fill="#f0b54a" />
-      <circle cx="12" cy="18.5" r="3.6" fill="#f0b54a" />
-      <rect x="11.3" y="2" width="1.4" height="20" rx=".7" fill="#f0b54a" opacity=".55" />
-    </svg>
   );
 }

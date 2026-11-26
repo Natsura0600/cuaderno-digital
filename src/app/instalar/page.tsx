@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { baseConfigurada, db, usaUpstash } from "@/db";
 import { APP, COLEGIO } from "@/lib/config";
-import { Perlas } from "@/components/Shell";
+import { Isotipo } from "@/components/Isotipo";
 import { FaltaBase } from "@/components/FaltaBase";
 import { Enviar } from "@/components/formularios";
 import { FormInstalar } from "./FormInstalar";
@@ -16,7 +16,7 @@ export default async function Instalar() {
   return (
     <main className="mx-auto grid min-h-dvh max-w-3xl content-center gap-6 py-10 pl-[max(16px,env(safe-area-inset-left))] pr-[max(16px,env(safe-area-inset-right))]">
       <div className="flex items-center gap-3">
-        <span className="grid size-12 place-items-center rounded-2xl bg-brand"><Perlas size={28} /></span>
+        <span className="grid size-14 place-items-center rounded-2xl border border-line bg-white"><Isotipo size={34} /></span>
         <div>
           <h1 className="text-2xl font-bold">Bienvenidos a {APP}</h1>
           <p className="text-muted">{COLEGIO} · la base de datos ({usaUpstash ? "Upstash Redis" : "Redis local"}) está vacía.</p>

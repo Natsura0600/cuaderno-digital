@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Asistencia, notas, comunicados y calendario del colegio.",
     start_url: "/inicio",
     display: "standalone",
-    background_color: "#f4f6f2",
-    theme_color: "#1d5a44",
+    background_color: "#ffffff",
+    theme_color: "#2e7d32",
     lang: "es-AR",
     icons: [
       { src: "/iconos/192", sizes: "192x192", type: "image/png" },

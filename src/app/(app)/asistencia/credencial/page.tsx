@@ -4,7 +4,7 @@ import { requerir } from "@/lib/auth";
 import { hijosDe, puedeVerAlumno, todosLosCursos } from "@/lib/alcance";
 import { COLEGIO, SEDE } from "@/lib/config";
 import { Encabezado, Pestanas, Vacio } from "@/components/ui";
-import { Perlas } from "@/components/Shell";
+import { Isotipo } from "@/components/Isotipo";
 
 export const metadata = { title: "Credencial" };
 
@@ -23,7 +23,7 @@ export default async function Credencial({ searchParams }: PageProps<"/asistenci
       {hijos.length > 1 && <Pestanas activo={a.id} items={hijos.map((h) => ({ href: `/asistencia/credencial?hijo=${h.id}`, texto: h.nombre, clave: h.id }))} />}
       <div className="mx-auto max-w-sm overflow-hidden rounded-3xl border border-line bg-surface shadow-sm">
         <div className="flex items-center gap-3 bg-brand px-5 py-4 text-brand-ink">
-          <Perlas size={26} />
+          <span className="grid size-10 place-items-center rounded-xl bg-white"><Isotipo size={26} /></span>
           <div className="leading-tight">
             <p className="font-display font-bold">{COLEGIO}</p>
             <p className="text-xs opacity-80">{SEDE}</p>

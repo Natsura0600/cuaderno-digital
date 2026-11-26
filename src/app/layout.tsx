@@ -6,6 +6,9 @@ import { APP, COLEGIO } from "@/lib/config";
 const figtree = Figtree({ variable: "--font-figtree", subsets: ["latin"] });
 const bricolage = Bricolage_Grotesque({ variable: "--font-bricolage", subsets: ["latin"] });
 
+// Toda la app depende de la sesión y de la base: nada se congela en la compilación.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: { default: `${APP} · ${COLEGIO}`, template: `%s · ${APP}` },
   description: `Sistema de organización escolar de ${COLEGIO}: asistencia, notas, comunicados, calendario y administración.`,
@@ -15,8 +18,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#1d5a44" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f1713" },
+    { media: "(prefers-color-scheme: light)", color: "#2e7d32" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1610" },
   ],
   viewportFit: "cover",
 };

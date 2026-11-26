@@ -1,51 +1,51 @@
 @import "tailwindcss";
 
-/* Cuaderno Digital — verde pizarrón + dorado de las perlas Montessori.
+/* Cuaderno Digital — colores del logo del Colegio Montessori (verde, rojo, azul y amarillo).
    Layout: barra lateral fija en escritorio, barra inferior en el celular. */
 :root {
-  --bg: #f4f6f2;
+  --bg: #f5f7f4;
   --surface: #ffffff;
-  --surface-2: #eef2ec;
-  --ink: #18241e;
-  --muted: #5a6a61;
-  --line: #dbe2da;
-  --brand: #1d5a44;
-  --brand-2: #2b7a5d;
+  --surface-2: #eef3ec;
+  --ink: #17241a;
+  --muted: #57695b;
+  --line: #dae3d8;
+  --brand: #2e7d32;
+  --brand-2: #3b8f3f;
   --brand-ink: #ffffff;
-  --brand-soft: #e2efe8;
-  --gold: #d6951b;
-  --gold-soft: #fbf0d9;
+  --brand-soft: #e3f2e2;
+  --gold: #e6e331;
+  --gold-soft: #fbf8d4;
   --ok: #2c8452;
   --ok-soft: #e1f3e8;
   --warn: #a8670d;
   --warn-soft: #fdf0d8;
-  --bad: #b8352a;
+  --bad: #c62d27;
   --bad-soft: #fbe5e2;
-  --info: #2a64a3;
-  --info-soft: #e2ecf8;
+  --info: #3d5a99;
+  --info-soft: #e5eaf6;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f1713;
-    --surface: #16211b;
-    --surface-2: #1c2a23;
+    --bg: #0f1610;
+    --surface: #161f17;
+    --surface-2: #1c291d;
     --ink: #e6eee9;
     --muted: #9aaba1;
-    --line: #2a3a31;
-    --brand: #5fbf95;
-    --brand-2: #7fd3ad;
-    --brand-ink: #0b1a13;
-    --brand-soft: #1d3329;
-    --gold: #f0b54a;
-    --gold-soft: #33290f;
+    --line: #29392b;
+    --brand: #6cc66f;
+    --brand-2: #8ad68c;
+    --brand-ink: #0b1a0c;
+    --brand-soft: #1c331d;
+    --gold: #e6e331;
+    --gold-soft: #33310f;
     --ok: #6fcf97;
     --ok-soft: #173326;
     --warn: #f2b45a;
     --warn-soft: #3a2a10;
-    --bad: #f08a7e;
+    --bad: #f28b84;
     --bad-soft: #3d1c18;
-    --info: #86b6ec;
+    --info: #9bb2ea;
     --info-soft: #172a40;
     color-scheme: dark;
   }
