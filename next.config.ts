@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // La app es 100 % personalizada por usuario: todo se renderiza en cada pedido.
+  cacheComponents: false,
+  experimental: {
+    serverActions: { bodySizeLimit: "10mb" },
+  },
   turbopack: {
     rules: {
       "*.css": {
