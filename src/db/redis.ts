@@ -105,5 +105,15 @@ function local(): KV {
   };
 }
 
-export const kv: KV = restUrl && restToken ? upstash() : local();
 export const usaUpstash = Boolean(restUrl && restToken);
+/** En Vercel sin Upstash conectado no hay base: las páginas muestran cómo conectarla. */
+export const baseConfigurada = usaUpstash || !process.env.VERCEL;
+
+function sinBase(): KV {
+  const error = async (): Promise<never> => {
+    throw new Error("Falta conectar la base de datos Upstash Redis al proyecto de Vercel (variables KV_REST_API_URL y KV_REST_API_TOKEN).");
+  };
+  return { hgetall: error, hget: error, hmget: error, hset: error, hdel: error, get: error, set: error, del: error, incrby: error, keys: error };
+}
+
+export const kv: KV = usaUpstash ? upstash() : baseConfigurada ? local() : sinBase();

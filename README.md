@@ -24,11 +24,8 @@ Las reglas institucionales (nota de aprobación, tope de inasistencias, valor de
 2. **Proyecto en Vercel:** en vercel.com, elegí *Add New → Project* y luego el repositorio. Vercel detecta Next.js solo.
 3. **Base de datos:** en el proyecto, entrá a *Storage → Create Database → Upstash for Redis* (o *Connect* si ya tenés una base en Upstash) y conectala al proyecto. Así se crean solas las variables `KV_REST_API_URL` y `KV_REST_API_TOKEN`.
    - Si creaste la base directamente en upstash.com, cargá a mano `UPSTASH_REDIS_REST_URL` y `UPSTASH_REDIS_REST_TOKEN` (en Settings → Environment Variables).
-4. **Clave de sesiones:** agregá la variable `SESSION_SECRET` con un texto largo y aleatorio. Podés generarlo así:
-   ```bash
-   openssl rand -hex 32
-   ```
-5. **Opcional, para subir archivos** (recursos y documentación de matrícula): en *Storage*, creá un **Blob** privado y conectalo al proyecto.
+4. **Archivos** (recursos y documentación de matrícula): en *Storage*, creá un **Blob** privado y conectalo al proyecto. En este proyecto ya está creado (`cuaderno-digital-archivos`).
+5. **Clave de sesiones (opcional):** si no definís `SESSION_SECRET`, la app genera una clave al azar la primera vez y la guarda en la base.
 6. Volvé a desplegar el proyecto y entrá a `https://tu-proyecto.vercel.app/instalar`. Desde ahí tenés dos opciones:
    - **Empezar con datos reales:** creás la cuenta de dirección y después cargás cursos, materias, docentes, alumnos y familias desde *Comunidad*.
    - **Probar con datos de ejemplo:** carga un colegio ficticio con cuentas de prueba para cada rol.

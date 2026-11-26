@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { usuarioActual } from "@/lib/auth";
-import { db } from "@/db";
+import { baseConfigurada, db } from "@/db";
 import { APP, COLEGIO, SEDE } from "@/lib/config";
 import { FormIngreso } from "./FormIngreso";
 import { Perlas } from "@/components/Shell";
+import { FaltaBase } from "@/components/FaltaBase";
 
 export const metadata = { title: "Ingresar" };
 
@@ -16,6 +17,7 @@ const DEMO = [
 ];
 
 export default async function Ingresar() {
+  if (!baseConfigurada) return <FaltaBase />;
   if (await usuarioActual()) redirect("/inicio");
   // Las cuentas de prueba se muestran solo si están cargados los datos de ejemplo
   const demo = process.env.MOSTRAR_DEMO !== "0" && Boolean(await db.idPorEmail("direccion@cuaderno.demo"));

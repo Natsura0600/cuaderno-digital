@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
-import { db, usaUpstash } from "@/db";
+import { baseConfigurada, db, usaUpstash } from "@/db";
 import { APP, COLEGIO } from "@/lib/config";
 import { Perlas } from "@/components/Shell";
+import { FaltaBase } from "@/components/FaltaBase";
 import { Enviar } from "@/components/formularios";
 import { FormInstalar } from "./FormInstalar";
 import { cargarEjemplo } from "./acciones";
@@ -10,6 +11,7 @@ export const metadata = { title: "Configuración inicial" };
 export const dynamic = "force-dynamic";
 
 export default async function Instalar() {
+  if (!baseConfigurada) return <FaltaBase />;
   if ((await db.usuarios.todos()).length > 0) redirect("/ingresar");
   return (
     <main className="mx-auto grid min-h-dvh max-w-3xl content-center gap-6 py-10 pl-[max(16px,env(safe-area-inset-left))] pr-[max(16px,env(safe-area-inset-right))]">

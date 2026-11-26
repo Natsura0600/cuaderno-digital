@@ -7,7 +7,7 @@ import { kv } from "./redis";
 import type * as T from "./tipos";
 
 export * from "./tipos";
-export { kv, usaUpstash } from "./redis";
+export { kv, usaUpstash, baseConfigurada } from "./redis";
 
 const P = "cd";
 const ahora = () => new Date().toISOString();
