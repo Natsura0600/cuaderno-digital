@@ -2,6 +2,7 @@ import "server-only";
 import { db, type Comunicado, type Evento, type Lectura } from "@/db";
 import { promedioTrimestre, valorFalta } from "./notas";
 import { alumnosDeCursos, hijosDe, todasLasMaterias, todosLosCursos, todosLosUsuarios, nombreCompleto } from "./alcance";
+import { inicioCiclo } from "./ajustes";
 
 export type ResumenAsis = { faltas: number; tardes: number; ausentes: number; justificadas: number; dias: number };
 
@@ -12,6 +13,7 @@ export async function resumenAsistencia(alumnoIds: number[]) {
   for (const id of alumnoIds) {
     const o: ResumenAsis = { faltas: 0, tardes: 0, ausentes: 0, justificadas: 0, dias: 0 };
     for (const r of asis.get(id) ?? []) {
+      if (r.fecha < inicioCiclo()) continue;
       o.dias++;
       o.faltas += valorFalta(r.estado);
       if (r.estado === "tarde") o.tardes++;

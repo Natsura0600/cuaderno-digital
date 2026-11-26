@@ -16,7 +16,7 @@ Sistema de organización escolar para el **Colegio Montessori de Luján, Sede Ac
 | **Calendario** | Calendario único con filtro por curso · Tope de 2 evaluaciones por día y por curso · Salidas pedagógicas con autorizaciones, pagos, lista de asistentes y responsables |
 | **Administración** | Matrícula online con formulario público, carga de documentos y consulta del estado · Reinscripción desde la app · Cuotas, becas, registro de pagos, reporte de morosidad y recordatorios automáticos · Inventario y reserva de espacios y equipos por módulo · Reemplazos con sugerencias de docentes libres · Alta de alumnos, familias, equipo, cursos y materias |
 
-Las reglas institucionales (nota de aprobación, tope de inasistencias, valor de una llegada tarde, módulos horarios) están en `src/lib/config.ts`. Los protocolos de convivencia están en `src/lib/protocolos.ts`.
+Las reglas institucionales (nota de aprobación, tope de inasistencias, valor de una llegada tarde y módulos horarios) se editan desde la página *Configuración*. Los valores por defecto están en `src/lib/config.ts`. Los protocolos de convivencia están en `src/lib/protocolos.ts`.
 
 ## Publicarlo en Vercel con Upstash
 
@@ -42,6 +42,25 @@ La contraseña de todas es `montessori`.
 | Familia (dos hijos) | `familia@cuaderno.demo` |
 
 > Antes de usarlo con datos reales, vaciá la base desde la consola de Upstash (*Data Browser → Flush*) y entrá a `/instalar` para crear la cuenta de dirección.
+
+## Poner en marcha el colegio (equipo directivo)
+
+Al entrar como directivo, el **Panel** muestra una lista de primeros pasos con lo que falta. En orden:
+
+1. **Configuración:** ciclo lectivo, trimestre en curso, nota de aprobación, tope de inasistencias, tolerancia para llegadas tarde y los módulos del día.
+2. **Cursos:** se pueden crear varios de una vez (por ejemplo, Secundaria de 1° a 6° con divisiones «A, B»). Cada curso lleva su preceptor/a.
+3. **Equipo:** en *Comunidad → Equipo*, uno por uno, o en *Comunidad → Importar*, pegando una planilla con Apellido, Nombre, E-mail, Rol, Cargo y Teléfono. Cada cuenta recibe una contraseña inicial que se le pide cambiar al entrar.
+4. **Materias y docentes:**
+   - **Por curso:** se usa un plan sugerido, se copian las materias de otro curso o se crea una materia en varios cursos a la vez. En la tabla se elige el docente y las horas semanales de cada materia.
+   - **Por docente:** se ve la carga horaria de cada profesor y se le asignan materias sin docente.
+5. **Alumnos y familias:** en *Comunidad → Importar*, pegando una planilla con Apellido, Nombre, DNI, Curso, E-mail del responsable, Nombre, Teléfono y Vínculo. Las cuentas familiares entran con el DNI del alumno como contraseña inicial.
+6. **Horarios:** *Generar horarios automáticamente* arma la grilla de todos los cursos sin superposiciones.
+
+Al terminar el año, *Configuración → Cerrar ciclo* hace lo siguiente:
+
+- Guarda las notas en el historial.
+- Pasa a cada alumno al curso siguiente; los del último año del nivel pasan al nivel siguiente o egresan.
+- Inicia el ciclo nuevo.
 
 ## Desarrollo en tu computadora
 

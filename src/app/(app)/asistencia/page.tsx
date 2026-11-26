@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { requerir } from "@/lib/auth";
 import { alumnosDeCursos, cursosDe, hijosDe } from "@/lib/alcance";
 import { REGLAS } from "@/lib/config";
+import { inicioCiclo } from "@/lib/ajustes";
 import { resumenAsistencia } from "@/lib/consultas";
 import { esHabil, fLarga, hoy, mesNombre } from "@/lib/fechas";
 import { fmtNota } from "@/lib/notas";
@@ -23,7 +24,8 @@ async function VistaFamilia({ padreId, hijo }: { padreId: number; hijo: number }
   const hijos = await hijosDe(padreId);
   if (!hijos.length) return <Vacio titulo="No hay alumnos vinculados a tu cuenta" />;
   const h = hijos.find((x) => x.id === hijo) ?? hijos[0];
-  const [res, regs] = await Promise.all([resumenAsistencia([h.id]), db.asistencia.lista(h.id)]);
+  const [res, todos] = await Promise.all([resumenAsistencia([h.id]), db.asistencia.lista(h.id)]);
+  const regs = todos.filter((x) => x.fecha >= inicioCiclo());
   const r = res.get(h.id)!;
   const meses = new Map<string, typeof regs>();
   for (const x of regs.sort((a, b) => b.fecha.localeCompare(a.fecha))) meses.set(x.fecha.slice(0, 7), [...(meses.get(x.fecha.slice(0, 7)) ?? []), x]);

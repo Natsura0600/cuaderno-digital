@@ -8,7 +8,7 @@ export default async function IngresoQr() {
   await requerir("preceptor", "directivo");
   return (
     <>
-      <Encabezado titulo="Ingreso con credencial QR" bajada="Cada lectura marca presente, o llegada tarde después de las 7:45, y avisa a la familia si corresponde." volver={{ href: "/asistencia", texto: "Asistencia" }} />
+      <Encabezado titulo="Ingreso con credencial QR" bajada="Cada lectura marca presente, o llegada tarde después de la hora de tolerancia, y avisa a la familia si corresponde." volver={{ href: "/asistencia", texto: "Asistencia" }} />
       <Escaner />
     </>
   );

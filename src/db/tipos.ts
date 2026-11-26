@@ -7,6 +7,8 @@ export type Nivel = "inicial" | "primaria" | "secundaria";
 export type Usuario = {
   id: number; nombre: string; apellido: string; email: string; passwordHash: string; rol: Rol;
   telefono: string | null; cargo: string | null; activo: boolean; creado: string;
+  /** Contraseña inicial que la persona todavía no cambió */
+  debeCambiarClave?: boolean;
 };
 export type Curso = { id: number; nombre: string; nivel: Nivel; anio: number; division: string; turno: "mañana" | "tarde"; preceptorId: number | null };
 export type Alumno = { id: number; nombre: string; apellido: string; dni: string; fechaNac: string | null; cursoId: number; codigoQr: string; activo: boolean };

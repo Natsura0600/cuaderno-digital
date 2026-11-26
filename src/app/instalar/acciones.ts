@@ -23,7 +23,7 @@ export async function crearPrimerDirectivo(_: { error: string } | null, fd: Form
   });
   await db.indexarEmail(email, u.id);
   await crearSesion(u.id);
-  redirect("/usuarios?tab=cursos");
+  redirect("/inicio");
 }
 
 export async function cargarEjemplo() {

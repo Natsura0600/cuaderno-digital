@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
+import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { requerir } from "@/lib/auth";
 import { NOMBRE_ROL } from "@/components/navegacion";
-import { Encabezado, Seccion } from "@/components/ui";
+import { Aviso, Encabezado, Seccion } from "@/components/ui";
 import { Enviar, FormAccion, type Resultado } from "@/components/formularios";
 import { usaUpstash } from "@/db";
 
@@ -18,7 +19,8 @@ async function cambiarClave(_: Resultado, fd: FormData): Promise<Resultado> {
   if (!reg || !(await bcrypt.compare(actual, reg.passwordHash))) return { ok: false, msg: "La contraseña actual no es correcta." };
   if (nueva.length < 8) return { ok: false, msg: "La nueva contraseña tiene que tener al menos 8 caracteres." };
   if (nueva !== repetir) return { ok: false, msg: "Las contraseñas nuevas no coinciden." };
-  await db.usuarios.actualizar(u.id, { passwordHash: await bcrypt.hash(nueva, 10) });
+  await db.usuarios.actualizar(u.id, { passwordHash: await bcrypt.hash(nueva, 10), debeCambiarClave: false });
+  revalidatePath("/", "layout");
   return { ok: true, msg: "Contraseña actualizada." };
 }
 
@@ -36,6 +38,7 @@ export default async function Perfil() {
   return (
     <>
       <Encabezado titulo="Mi cuenta" bajada={`${u.nombre} ${u.apellido} · ${u.cargo ?? NOMBRE_ROL[u.rol]}`} />
+      {u.debeCambiarClave && <div className="mb-4"><Aviso tono="aviso">Estás usando una contraseña inicial. Elegí una propia para proteger tu cuenta.</Aviso></div>}
       <div className="grid gap-4 md:grid-cols-2">
         <Seccion titulo="Datos de contacto">
           <p className="mb-3 text-sm"><span className="text-muted">E-mail:</span> {u.email}</p>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { db } from "@/db";
+import { db, kv } from "@/db";
 import { requerir, type Usuario } from "@/lib/auth";
 import { alumnosDeCursos, cursosDe, hijosDe, nombreCompleto, todasLasMaterias, todosLosAlumnos, todosLosCursos, todosLosUsuarios } from "@/lib/alcance";
 import { calcularAlertas } from "@/lib/alertas";
@@ -346,6 +346,7 @@ async function InicioDirectivo({ u }: { u: Usuario }) {
   return (
     <>
       <Encabezado titulo={saludo(u)} bajada={`${fLarga(hoy())} · ${als.length} alumnos, ${docentes} docentes, ${cs.length} cursos`} />
+      <PrimerosPasos />
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Dato etiqueta="Asistencia (30 días)" valor={asis30 !== null ? `${String(asis30).replace(".", ",")} %` : "—"} tono={asis30 !== null && asis30 < 90 ? "aviso" : "ok"} />
         <Dato etiqueta="Alumnos en alerta" valor={alertas.length} detalle={`${alertas.filter((a) => a.nivel === "alta").length} con prioridad alta`} tono={alertas.some((a) => a.nivel === "alta") ? "peligro" : undefined} />
@@ -362,6 +363,9 @@ async function InicioDirectivo({ u }: { u: Usuario }) {
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <Seccion titulo={`Rendimiento por curso y materia · ${REGLAS.trimestreActual}° trimestre`} acciones={<Link className="link text-sm" href="/calificaciones">Detalle</Link>}>
+          {proms.every((x) => x.prom === null) ? (
+            <Vacio titulo={`Todavía no hay notas del ${REGLAS.trimestreActual}° trimestre`}>Cuando los docentes carguen calificaciones, acá vas a ver el promedio de cada materia por curso.</Vacio>
+          ) : (
           <TablaScroll>
             <table className="tabla tabular">
               <thead>
@@ -384,6 +388,7 @@ async function InicioDirectivo({ u }: { u: Usuario }) {
               </tbody>
             </table>
           </TablaScroll>
+          )}
         </Seccion>
         <div className="grid content-start gap-4">
           <Seccion titulo="Prioridad alta" acciones={<Link className="link text-sm" href="/alertas">Panel de alertas</Link>}>
@@ -399,6 +404,7 @@ async function InicioDirectivo({ u }: { u: Usuario }) {
             )}
           </Seccion>
           <Seccion titulo="Próximas fechas" acciones={<Link className="link text-sm" href="/calendario">Calendario</Link>}>
+            {evs.filter((e) => e.tipo !== "evaluacion").length === 0 && <p className="text-sm text-muted">No hay actos, salidas ni feriados cargados para las próximas semanas.</p>}
             <ul className="grid gap-2 text-sm">
               {evs.filter((e) => e.tipo !== "evaluacion").slice(0, 6).map((e) => (
                 <li key={e.id} className="flex items-center gap-3">
@@ -412,5 +418,44 @@ async function InicioDirectivo({ u }: { u: Usuario }) {
         </div>
       </div>
     </>
+  );
+}
+
+/* Lista de primeros pasos para un colegio que recién empieza a cargar datos */
+async function PrimerosPasos() {
+  const [cs, us, mats, hs, als, fams, ajustes] = await Promise.all([
+    todosLosCursos(), todosLosUsuarios(), todasLasMaterias(), db.horarios.todos(), todosLosAlumnos(), db.familias.todos(), kv.get("cd:config:ajustes"),
+  ]);
+  const profes = us.filter((x) => x.rol === "profesor" && x.activo);
+  const sinDocente = mats.filter((m) => !m.profesorId).length;
+  const conFamilia = new Set(fams.map((f) => f.alumnoId));
+  const sinFamilia = als.filter((a) => !conFamilia.has(a.id)).length;
+  const sinPrec = cs.filter((c) => !c.preceptorId).length;
+  const pasos = [
+    { ok: Boolean(ajustes), texto: "Revisá el ciclo lectivo, el trimestre, la nota de aprobación y el horario escolar", href: "/configuracion", boton: "Configuración" },
+    { ok: cs.length > 0, texto: "Creá los cursos (podés crear todos los de un nivel de una vez)", href: "/cursos", boton: "Cursos" },
+    { ok: profes.length > 0 && us.some((x) => x.rol === "preceptor"), texto: "Cargá a docentes y preceptores (uno por uno o pegando una planilla)", href: "/usuarios?tab=importar", boton: "Equipo" },
+    { ok: cs.length > 0 && sinPrec === 0, texto: sinPrec ? `Asigná preceptor a ${sinPrec} curso${sinPrec > 1 ? "s" : ""}` : "Asigná un preceptor a cada curso", href: "/cursos", boton: "Cursos" },
+    { ok: mats.length > 0 && sinDocente === 0, texto: mats.length ? `Asigná docente a ${sinDocente} materia${sinDocente > 1 ? "s" : ""}` : "Creá las materias de cada curso y asigná quién las dicta", href: "/materias", boton: "Materias" },
+    { ok: als.length > 0, texto: "Cargá a los alumnos y sus familias", href: "/usuarios?tab=importar", boton: "Alumnos" },
+    { ok: als.length > 0 && sinFamilia === 0, texto: sinFamilia ? `Vinculá una familia a ${sinFamilia} alumno${sinFamilia > 1 ? "s" : ""}` : "Vinculá a cada alumno con su familia", href: "/usuarios?tab=alumnos", boton: "Alumnos" },
+    { ok: hs.length > 0, texto: "Generá los horarios de todos los cursos", href: "/horarios", boton: "Horarios" },
+  ];
+  const hechos = pasos.filter((p) => p.ok).length;
+  if (hechos === pasos.length) return null;
+  return (
+    <Seccion titulo="Primeros pasos para poner en marcha el colegio" acciones={<Chip tono="marca">{hechos} de {pasos.length}</Chip>} className="mb-4">
+      <ol className="grid gap-2">
+        {pasos.map((p, i) => (
+          <li key={i} className={`flex flex-wrap items-center justify-between gap-2 rounded-xl px-3 py-2 text-sm ${p.ok ? "bg-ok-soft text-ok" : "border border-line"}`}>
+            <span className="flex items-center gap-3">
+              <span className={`grid size-6 shrink-0 place-items-center rounded-full text-xs font-bold ${p.ok ? "bg-ok text-white" : "border border-line text-muted"}`}>{p.ok ? "✓" : i + 1}</span>
+              <span className={p.ok ? "" : "text-ink"}>{p.texto}</span>
+            </span>
+            {!p.ok && <Link href={p.href} className="btn-sec btn-chico">{p.boton}</Link>}
+          </li>
+        ))}
+      </ol>
+    </Seccion>
   );
 }

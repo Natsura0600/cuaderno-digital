@@ -5,10 +5,10 @@ import { db, ESTADOS_ASISTENCIA, type Asistencia, type EstadoAsistencia } from "
 import { requerir } from "@/lib/auth";
 import { puedeVerCurso } from "@/lib/alcance";
 import { fCorta, hoy, esHabil } from "@/lib/fechas";
+import { REGLAS } from "@/lib/config";
 import { notificarFamilias } from "@/lib/notificar";
 import type { Resultado } from "@/components/formularios";
 
-const HORA_TARDE = "07:45";
 
 export async function guardarAsistencia(cursoId: number, fecha: string, marcas: Record<number, EstadoAsistencia>): Promise<Resultado> {
   const u = await requerir("preceptor", "directivo");
@@ -51,7 +51,7 @@ export async function registrarQr(codigo: string): Promise<{ ok: boolean; msg: s
   const previo = await db.asistencia.campo(a.id, f);
   if (previo && previo.estado !== "ausente") return { ok: true, msg: "Ya estaba registrado hoy.", nombre: `${a.nombre} ${a.apellido}`, estado: previo.estado };
   const hora = new Intl.DateTimeFormat("es-AR", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "America/Argentina/Buenos_Aires" }).format(new Date());
-  const estado: EstadoAsistencia = hora > HORA_TARDE ? "tarde" : "presente";
+  const estado: EstadoAsistencia = hora > REGLAS.horaTarde ? "tarde" : "presente";
   await db.asistencia.guardar(a.id, { [f]: { fecha: f, estado, metodo: "qr", tomadaPor: u.id, hora: new Date().toISOString() } });
   if (estado === "tarde") await notificarFamilias(a.id, { titulo: `${a.nombre} llegó tarde`, cuerpo: `Ingresó a las ${hora}.`, link: `/asistencia?hijo=${a.id}`, tipo: "asistencia" });
   revalidatePath("/asistencia");

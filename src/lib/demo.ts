@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { db, claveCuota, claveNota } from "@/db";
 import type * as T from "@/db/tipos";
 import { generarHorario } from "./horarios";
+import { kv } from "@/db/redis";
 
 export async function cargarDemo(log: (m: string) => void = () => {}) {
   let semilla = 20261126;
@@ -416,6 +417,9 @@ export async function cargarDemo(log: (m: string) => void = () => {}) {
   await aviso(familia.id, "Reconocimiento para Julia", "Liderazgo positivo: coordinó la campaña de reciclaje.", "/convivencia", "convivencia");
   await aviso(profeDe.get("Matemática")!, "Planificación pendiente", "Todavía no cargaste la planificación de esta semana para 3° A.", "/planificacion", "info");
   await aviso(directora.id, "Nueva solicitud de matrícula", "Lola Carrizo — 1° año.", "/matricula", "matricula");
+
+  // Ajustes del colegio de ejemplo: ciclo en curso y tercer trimestre
+  await kv.set("cd:config:ajustes", JSON.stringify({ reglas: { cicloLectivo: ANIO, trimestreActual: 3 } }));
 
   return { alumnos: alumnos.length, materias: materias.length, asistencias: nAsis };
 }

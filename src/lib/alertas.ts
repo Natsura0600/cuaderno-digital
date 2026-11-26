@@ -1,6 +1,7 @@
 import "server-only";
 import { db } from "@/db";
 import { REGLAS } from "./config";
+import { inicioCiclo } from "./ajustes";
 import { hoy, sumarDias } from "./fechas";
 import { fmtNota, promedioTrimestre, riesgoAcademico, valorFalta } from "./notas";
 import { alumnosDeCursos, todosLosCursos, todasLasMaterias } from "./alcance";
@@ -41,7 +42,7 @@ export async function calcularAlertas(cursoIds: number[]): Promise<Alerta[]> {
   for (const a of als) {
     const motivos: Alerta["motivos"] = [];
     let puntaje = 0;
-    const misAsis = asis.get(a.id) ?? [];
+    const misAsis = (asis.get(a.id) ?? []).filter((x) => x.fecha >= inicioCiclo());
     const faltasAnio = misAsis.reduce((s, x) => s + valorFalta(x.estado), 0);
     const faltas30 = misAsis.filter((x) => x.fecha >= desde30).reduce((s, x) => s + valorFalta(x.estado), 0);
     if (faltasAnio >= REGLAS.limiteInasistencias - 5) {

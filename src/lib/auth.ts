@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { SignJWT, jwtVerify } from "jose";
 import { cache } from "react";
 import { db, kv, type Rol } from "@/db";
+import { cargarAjustes } from "./ajustes";
 
 const COOKIE = "cuaderno_sesion";
 const DURACION = 60 * 60 * 24 * 30; // 30 días
@@ -55,16 +56,18 @@ export type Usuario = {
   email: string;
   rol: Rol;
   cargo: string | null;
+  debeCambiarClave: boolean;
 };
 
 export const usuarioActual = cache(async (): Promise<Usuario | null> => {
+  await cargarAjustes();
   const token = (await cookies()).get(COOKIE)?.value;
   if (!token) return null;
   try {
     const { payload } = await jwtVerify(token, await clave());
     const u = await db.usuarios.uno(Number(payload.uid));
     if (!u || !u.activo) return null;
-    return { id: u.id, nombre: u.nombre, apellido: u.apellido, email: u.email, rol: u.rol, cargo: u.cargo };
+    return { id: u.id, nombre: u.nombre, apellido: u.apellido, email: u.email, rol: u.rol, cargo: u.cargo, debeCambiarClave: Boolean(u.debeCambiarClave) };
   } catch {
     return null;
   }

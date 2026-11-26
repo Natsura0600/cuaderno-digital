@@ -10,7 +10,7 @@ export default async function LayoutApp({ children }: LayoutProps<"/">) {
   if (u.rol === "padre") await recordatoriosDeCuotas(u.id);
   const n = (await db.avisos.lista(u.id)).filter((a) => !a.leida).length;
   return (
-    <Shell rol={u.rol} nombre={`${u.nombre} ${u.apellido}`} cargo={u.cargo} colegio={COLEGIO} sede={SEDE} sinLeer={n} salir={salir}>
+    <Shell rol={u.rol} nombre={`${u.nombre} ${u.apellido}`} cargo={u.cargo} colegio={COLEGIO} sede={SEDE} sinLeer={n} salir={salir} debeCambiarClave={u.debeCambiarClave}>
       {children}
     </Shell>
   );

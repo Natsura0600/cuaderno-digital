@@ -43,10 +43,13 @@ export function FormAccion({
   );
 }
 
-export function Confirmar({ children, mensaje, className = "btn-peligro btn-chico" }: { children: ReactNode; mensaje: string; className?: string }) {
+export function Confirmar({
+  children, mensaje, className = "btn-peligro btn-chico", formAction,
+}: { children: ReactNode; mensaje: string; className?: string; formAction?: (fd: FormData) => void | Promise<void> }) {
   return (
     <button
       type="submit"
+      formAction={formAction}
       className={className}
       onClick={(e) => {
         const b = e.currentTarget;

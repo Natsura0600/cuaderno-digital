@@ -51,6 +51,8 @@ export const NAV: Record<Rol, ItemNav[]> = {
   directivo: [
     I("/inicio", "Panel", "home", "General"),
     I("/alertas", "Alertas tempranas", "alert", "General"),
+    I("/cursos", "Cursos", "layers", "Académico"),
+    I("/materias", "Materias y docentes", "book", "Académico"),
     I("/horarios", "Horarios", "clock", "Académico"),
     I("/calificaciones", "Calificaciones", "grad", "Académico"),
     I("/planificacion", "Planificación", "list", "Académico"),
@@ -66,6 +68,7 @@ export const NAV: Record<Rol, ItemNav[]> = {
     I("/espacios", "Inventario y espacios", "box", "Administración"),
     I("/reemplazos", "Reemplazos", "swap", "Administración"),
     I("/usuarios", "Comunidad", "id", "Administración"),
+    I("/configuracion", "Configuración", "settings", "Administración"),
   ],
 };
 

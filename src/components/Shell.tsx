@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import {
   AlertTriangle, ArrowLeftRight, Bell, Box, Bus, CalendarDays, Check, Clock, FileText, Folder, GraduationCap, HeartHandshake,
-  Home, IdCard, List, LogOut, Mail, Menu, NotebookPen, Users, Wallet, X,
+  BookOpen, Home, Layers, IdCard, List, LogOut, Mail, Menu, NotebookPen, Settings, Users, Wallet, X,
 } from "lucide-react";
 import { NAV, NOMBRE_ROL, RAPIDOS } from "./navegacion";
 import { Isotipo } from "./Isotipo";
@@ -14,13 +14,13 @@ import type { Rol } from "@/db/tipos";
 const ICONOS: Record<string, typeof Home> = {
   home: Home, notebook: NotebookPen, mail: Mail, check: Check, grad: GraduationCap, heart: HeartHandshake, clock: Clock,
   calendar: CalendarDays, bus: Bus, users: Users, folder: Folder, wallet: Wallet, file: FileText, list: List, box: Box,
-  alert: AlertTriangle, swap: ArrowLeftRight, id: IdCard,
+  alert: AlertTriangle, swap: ArrowLeftRight, id: IdCard, book: BookOpen, settings: Settings, layers: Layers,
 };
 
 export function Shell({
-  rol, nombre, cargo, colegio, sede, sinLeer, salir, children,
+  rol, nombre, cargo, colegio, sede, sinLeer, salir, debeCambiarClave, children,
 }: {
-  rol: Rol; nombre: string; cargo: string | null; colegio: string; sede: string; sinLeer: number; salir: () => Promise<void>; children: ReactNode;
+  rol: Rol; nombre: string; cargo: string | null; colegio: string; sede: string; sinLeer: number; salir: () => Promise<void>; debeCambiarClave?: boolean; children: ReactNode;
 }) {
   const path = usePathname();
   const [abierto, setAbierto] = useState(false);
@@ -111,7 +111,14 @@ export function Shell({
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-6xl pb-28 pt-6 pl-[max(16px,env(safe-area-inset-left))] pr-[max(16px,env(safe-area-inset-right))] lg:px-8 lg:pb-12">{children}</main>
+        <main className="mx-auto w-full max-w-6xl pb-28 pt-6 pl-[max(16px,env(safe-area-inset-left))] pr-[max(16px,env(safe-area-inset-right))] lg:px-8 lg:pb-12">
+          {debeCambiarClave && path !== "/perfil" && (
+            <Link href="/perfil" className="mb-5 block rounded-xl bg-gold-soft px-4 py-3 text-sm font-semibold text-warn hover:underline">
+              Estás usando una contraseña inicial. Cambiala por una propia →
+            </Link>
+          )}
+          {children}
+        </main>
       </div>
 
       {/* Celular: barra inferior */}

@@ -32,10 +32,10 @@ export async function darDeAlta(id: number, _: Resultado, fd: FormData): Promise
   if (!padreId) {
     const clave = Array.from(crypto.getRandomValues(new Uint8Array(6)), (b) => "abcdefghjkmnpqrstuvwxyz23456789"[b % 31]).join("");
     const [nombre, ...ap] = s.tutorNombre.split(" ");
-    const u = await db.usuarios.insertar({ nombre, apellido: ap.join(" ") || s.alumnoApellido, email: s.tutorEmail, passwordHash: await bcrypt.hash(clave, 10), rol: "padre", telefono: s.tutorTelefono, cargo: null, activo: true, creado: new Date().toISOString() });
+    const u = await db.usuarios.insertar({ nombre, apellido: ap.join(" ") || s.alumnoApellido, email: s.tutorEmail, passwordHash: await bcrypt.hash(clave, 10), rol: "padre", telefono: s.tutorTelefono, cargo: null, activo: true, creado: new Date().toISOString(), debeCambiarClave: true });
     await db.indexarEmail(s.tutorEmail, u.id);
     padreId = u.id;
-    msgClave = ` Cuenta de la familia: ${s.tutorEmail} · contraseña inicial «${clave}» (pasásela y pediles que la cambien).`;
+    msgClave = ` Cuenta de la familia: ${s.tutorEmail} · contraseña inicial «${clave}» (se le pide cambiarla al entrar).`;
   }
   const codigoQr = `CD-${Array.from(crypto.getRandomValues(new Uint8Array(4)), (b) => b.toString(16).padStart(2, "0")).join("").toUpperCase()}`;
   const a = await db.alumnos.insertar({ nombre: s.alumnoNombre, apellido: s.alumnoApellido, dni: s.alumnoDni, fechaNac: s.alumnoFechaNac, cursoId, codigoQr, activo: true });
